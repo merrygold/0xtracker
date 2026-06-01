@@ -10,6 +10,7 @@ import {
   formatCurrency,
   daysAgo,
   getStageProgress,
+  getStageColors,
 } from "@/lib/helpers"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -18,7 +19,6 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Progress } from "@/components/ui/progress"
 import { Separator } from "@/components/ui/separator"
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
 import {
   ArrowLeft,
   Plus,
@@ -29,7 +29,6 @@ import {
   BarChart3,
   DollarSign,
   BookOpen,
-  GripVertical,
   CheckCircle2,
   Circle,
   Clock,
@@ -43,9 +42,9 @@ const STATUS_CONFIG: Record<
   { icon: typeof CheckCircle2; label: string; color: string }
 > = {
   todo: { icon: Circle, label: "To Do", color: "text-muted-foreground" },
-  in_progress: { icon: Clock, label: "In Progress", color: "text-blue-500" },
-  done: { icon: CheckCircle2, label: "Done", color: "text-green-500" },
-  blocked: { icon: AlertCircle, label: "Blocked", color: "text-red-500" },
+  in_progress: { icon: Clock, label: "In Progress", color: "text-mer-blue" },
+  done: { icon: CheckCircle2, label: "Done", color: "text-mer-green" },
+  blocked: { icon: AlertCircle, label: "Blocked", color: "text-mer-rust" },
 }
 
 export default function ProjectDetailPage() {
@@ -67,7 +66,7 @@ export default function ProjectDetailPage() {
   if (!project) {
     return (
       <div className="flex flex-col items-center justify-center py-20">
-        <h2 className="text-xl font-semibold mb-2">Project not found</h2>
+        <h2 className="font-heading text-xl mb-2">Project not found</h2>
         <Link href="/projects">
           <Button variant="outline">Back to Projects</Button>
         </Link>
@@ -117,17 +116,19 @@ export default function ProjectDetailPage() {
     router.push("/projects")
   }
 
+  const currentColors = getStageColors(project.stage)
+
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-4">
         <Link href="/projects">
-          <Button variant="ghost" size="icon">
+          <Button variant="ghost" size="icon" className="h-9 w-9">
             <ArrowLeft className="h-4 w-4" />
           </Button>
         </Link>
-        <div className="flex-1">
+        <div className="flex-1 min-w-0">
           <div className="flex items-center gap-3">
-            <h1 className="text-2xl font-bold tracking-tight">{project.name}</h1>
+            <h1 className="font-heading text-2xl tracking-tight truncate">{project.name}</h1>
             <Badge variant="outline" className={getStageColor(project.stage)}>
               {getStageLabel(project.stage)}
             </Badge>
@@ -136,22 +137,22 @@ export default function ProjectDetailPage() {
             <p className="text-sm text-muted-foreground mt-0.5">{project.domain}</p>
           )}
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 shrink-0">
           <Link href={`/projects/${projectId}/finance`}>
-            <Button variant="outline" size="sm">
-              <DollarSign className="h-4 w-4 mr-1" />
+            <Button variant="outline" size="sm" className="gap-1.5">
+              <DollarSign className="h-3.5 w-3.5" />
               Finance
             </Button>
           </Link>
           <Link href={`/projects/${projectId}/stats`}>
-            <Button variant="outline" size="sm">
-              <BarChart3 className="h-4 w-4 mr-1" />
+            <Button variant="outline" size="sm" className="gap-1.5">
+              <BarChart3 className="h-3.5 w-3.5" />
               Stats
             </Button>
           </Link>
           <Link href={`/projects/${projectId}/reference`}>
-            <Button variant="outline" size="sm">
-              <BookOpen className="h-4 w-4 mr-1" />
+            <Button variant="outline" size="sm" className="gap-1.5">
+              <BookOpen className="h-3.5 w-3.5" />
               Reference
             </Button>
           </Link>
@@ -159,61 +160,62 @@ export default function ProjectDetailPage() {
       </div>
 
       <div className="grid gap-4 md:grid-cols-4">
-        <Card>
+        <Card className="border-border/50 shadow-sm">
           <CardContent className="p-4">
-            <div className="text-2xl font-bold">{progress}%</div>
-            <p className="text-xs text-muted-foreground">Overall Progress</p>
-            <Progress value={progress} className="h-2 mt-2" />
+            <div className="text-2xl font-heading tracking-tight stage-number">{progress}%</div>
+            <p className="text-xs text-muted-foreground mt-0.5">Overall Progress</p>
+            <Progress value={progress} className="h-1.5 mt-2" />
           </CardContent>
         </Card>
-        <Card>
+        <Card className="border-border/50 shadow-sm">
           <CardContent className="p-4">
-            <div className="text-2xl font-bold">
+            <div className="text-2xl font-heading tracking-tight stage-number">
               {doneTasks}/{totalTasks}
             </div>
-            <p className="text-xs text-muted-foreground">Tasks Completed</p>
+            <p className="text-xs text-muted-foreground mt-0.5">Tasks Completed</p>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="border-border/50 shadow-sm">
           <CardContent className="p-4">
-            <div className="text-2xl font-bold">
+            <div className="text-2xl font-heading tracking-tight stage-number">
               {currentStageProgress().done}/{currentStageProgress().total}
             </div>
-            <p className="text-xs text-muted-foreground">
+            <p className="text-xs text-muted-foreground mt-0.5">
               {getStageLabel(project.stage)} Stage
             </p>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="border-border/50 shadow-sm">
           <CardContent className="p-4">
-            <div className="text-2xl font-bold">{daysAgo(project.updatedAt)}</div>
-            <p className="text-xs text-muted-foreground">Last Updated</p>
+            <div className="text-2xl font-heading tracking-tight">{daysAgo(project.updatedAt)}</div>
+            <p className="text-xs text-muted-foreground mt-0.5">Last Updated</p>
           </CardContent>
         </Card>
       </div>
 
-      <div className="flex items-center gap-2 overflow-x-auto pb-2">
+      <div className="flex items-center gap-2 overflow-x-auto pb-2 -mx-1 px-1">
         {STAGES.map((stage, index) => {
           const st = stageTasks(stage.key)
           const done = st.filter((t) => t.status === "done").length
           const isCurrentStage = project.stage === stage.key
           const isExpanded = activeStage === stage.key || isCurrentStage
+          const colors = getStageColors(stage.key)
 
           return (
             <button
               key={stage.key}
               onClick={() => setActiveStage(isExpanded && activeStage === stage.key ? null : stage.key)}
-              className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-sm whitespace-nowrap transition-colors ${
+              className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-sm whitespace-nowrap transition-all duration-200 border ${
                 isCurrentStage
-                  ? getStageColor(stage.key) + " border font-medium"
+                  ? `${colors.bg} ${colors.text} ${colors.border} font-medium`
                   : isExpanded
-                  ? "bg-accent text-accent-foreground border"
-                  : "bg-muted text-muted-foreground"
+                  ? "bg-accent text-accent-foreground border-border"
+                  : "bg-muted text-muted-foreground border-transparent hover:border-border"
               }`}
             >
-              <div className={`h-2 w-2 rounded-full ${getStageDotColor(stage.key)}`} />
+              <div className={`h-2 w-2 rounded-full ${colors.dot}`} />
               <span>{stage.label}</span>
-              <span className="text-xs opacity-70">
+              <span className="text-xs opacity-60 stage-number">
                 {done}/{st.length}
               </span>
             </button>
@@ -224,21 +226,22 @@ export default function ProjectDetailPage() {
       <div className="grid gap-6 lg:grid-cols-3">
         <div className={`lg:col-span-${!activeStage ? "3" : "2"} space-y-4`}>
           <div className="flex items-center justify-between">
-            <h2 className="text-lg font-semibold">
+            <h2 className="font-heading text-lg tracking-tight">
               {getStageLabel(activeStage || project.stage)} Tasks
             </h2>
             <Button
               variant="outline"
               size="sm"
+              className="gap-1.5"
               onClick={() => setAddingTask(activeStage || project.stage)}
             >
-              <Plus className="h-4 w-4 mr-1" />
+              <Plus className="h-3.5 w-3.5" />
               Add Task
             </Button>
           </div>
 
           {addingTask === (activeStage || project.stage) && (
-            <Card>
+            <Card className="border-primary/30 shadow-sm">
               <CardContent className="p-4 flex gap-2">
                 <Input
                   placeholder="Task title..."
@@ -266,7 +269,7 @@ export default function ProjectDetailPage() {
               return (
                 <Card
                   key={task.id}
-                  className={`transition-colors ${task.status === "done" ? "opacity-60" : ""}`}
+                  className={`transition-all duration-200 border-border/50 ${task.status === "done" ? "opacity-60" : "shadow-sm"}`}
                 >
                   <CardContent className="p-4">
                     {isEditing ? (
@@ -290,11 +293,7 @@ export default function ProjectDetailPage() {
                           onBlur={(e) => updateTask(task.id, { notes: e.target.value })}
                         />
                         <div className="flex gap-2">
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={() => setEditingTask(null)}
-                          >
+                          <Button size="sm" variant="outline" onClick={() => setEditingTask(null)}>
                             Done
                           </Button>
                         </div>
@@ -303,7 +302,7 @@ export default function ProjectDetailPage() {
                       <div className="flex items-start gap-3">
                         <button
                           onClick={() => cycleStatus(task.id, task.status)}
-                          className={`mt-0.5 ${statusConfig.color} hover:opacity-80`}
+                          className={`mt-0.5 hover:opacity-80 transition-opacity ${statusConfig.color}`}
                           title={`Status: ${statusConfig.label} (click to cycle)`}
                         >
                           <StatusIcon className="h-5 w-5" />
@@ -372,7 +371,7 @@ export default function ProjectDetailPage() {
             })}
 
             {stageTasks(activeStage || project.stage).length === 0 && (
-              <Card>
+              <Card className="border-border/50">
                 <CardContent className="p-8 text-center">
                   <p className="text-sm text-muted-foreground">No tasks for this stage</p>
                 </CardContent>
@@ -383,17 +382,17 @@ export default function ProjectDetailPage() {
 
         {activeStage && activeStage !== project.stage && (
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold">Quick Actions</h3>
-            <Card>
+            <h3 className="font-heading text-lg tracking-tight">Quick Actions</h3>
+            <Card className="border-border/50">
               <CardContent className="p-4 space-y-3">
                 <Button
                   variant="outline"
-                  className="w-full justify-start"
+                  className="w-full justify-start gap-2"
                   onClick={() => {
                     updateProject(projectId, { stage: activeStage })
                   }}
                 >
-                  <ChevronRight className="h-4 w-4 mr-2" />
+                  <ChevronRight className="h-4 w-4" />
                   Move Project to {getStageLabel(activeStage)} Stage
                 </Button>
               </CardContent>
@@ -403,47 +402,46 @@ export default function ProjectDetailPage() {
 
         {!activeStage && (
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold">Stage Progress</h3>
-            <Card>
+            <h3 className="font-heading text-lg tracking-tight">Stage Progress</h3>
+            <Card className="border-border/50">
               <CardContent className="p-4 space-y-4">
                 {STAGES.map((stage) => {
                   const st = stageTasks(stage.key)
                   const done = st.filter((t) => t.status === "done").length
                   const pct = st.length > 0 ? Math.round((done / st.length) * 100) : 0
                   const isCurrent = project.stage === stage.key
+                  const colors = getStageColors(stage.key)
 
                   return (
                     <div key={stage.key} className="space-y-1">
                       <div className="flex items-center justify-between text-sm">
                         <div className="flex items-center gap-2">
-                          <div
-                            className={`h-2 w-2 rounded-full ${getStageDotColor(stage.key)}`}
-                          />
+                          <div className={`h-2 w-2 rounded-full ${colors.dot}`} />
                           <span className={isCurrent ? "font-medium" : "text-muted-foreground"}>
                             {stage.label}
                           </span>
                         </div>
-                        <span className="text-xs text-muted-foreground">
+                        <span className="text-xs text-muted-foreground stage-number">
                           {done}/{st.length}
                         </span>
                       </div>
-                      <Progress value={pct} className="h-1.5" />
+                      <Progress value={pct} className="h-1" />
                     </div>
                   )
                 })}
               </CardContent>
             </Card>
 
-            <h3 className="text-lg font-semibold">Project Info</h3>
-            <Card>
+            <h3 className="font-heading text-lg tracking-tight">Project Info</h3>
+            <Card className="border-border/50">
               <CardContent className="p-4 space-y-3 text-sm">
                 <div>
-                  <span className="text-muted-foreground">Main Keyword</span>
-                  <p className="font-medium">{project.mainKeyword || "—"}</p>
+                  <span className="text-xs uppercase tracking-wider text-muted-foreground">Main Keyword</span>
+                  <p className="font-medium mt-0.5">{project.mainKeyword || "—"}</p>
                 </div>
                 {project.competitorUrls.length > 0 && (
                   <div>
-                    <span className="text-muted-foreground">Competitors</span>
+                    <span className="text-xs uppercase tracking-wider text-muted-foreground">Competitors</span>
                     <div className="mt-1 space-y-1">
                       {project.competitorUrls.map((url, i) => (
                         <a
@@ -462,7 +460,7 @@ export default function ProjectDetailPage() {
                 )}
                 {project.supportingKeywords.length > 0 && (
                   <div>
-                    <span className="text-muted-foreground">Keywords</span>
+                    <span className="text-xs uppercase tracking-wider text-muted-foreground">Keywords</span>
                     <div className="flex flex-wrap gap-1 mt-1">
                       {project.supportingKeywords.slice(0, 8).map((kw) => (
                         <Badge key={kw} variant="secondary" className="text-xs">
@@ -480,8 +478,8 @@ export default function ProjectDetailPage() {
               </CardContent>
             </Card>
 
-            <h3 className="text-lg font-semibold text-destructive">Danger Zone</h3>
-            <Card className="border-destructive/50">
+            <h3 className="font-heading text-lg tracking-tight text-destructive">Danger Zone</h3>
+            <Card className="border-destructive/30">
               <CardContent className="p-4">
                 {!showDeleteConfirm ? (
                   <Button variant="destructive" size="sm" onClick={() => setShowDeleteConfirm(true)}>

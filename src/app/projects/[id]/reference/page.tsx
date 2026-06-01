@@ -3,13 +3,11 @@
 import { useState } from "react"
 import { useAppStore } from "@/lib/store"
 import { STAGES, STAGE_CHECKLISTS, STAGE_TIPS, type ProjectStage } from "@/lib/types"
-import { getStageColor, getStageLabel, getStageDotColor } from "@/lib/helpers"
+import { getStageColor, getStageLabel, getStageDotColor, getStageColors } from "@/lib/helpers"
 import { AI_BUILD_PROMPT_TEMPLATE, SEO_PROMPT_TEMPLATE } from "@/lib/types"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Separator } from "@/components/ui/separator"
-import { ScrollArea } from "@/components/ui/scroll-area"
 import { Checkbox } from "@/components/ui/checkbox"
 import { ArrowLeft, Copy, Check, Lightbulb, AlertTriangle, ExternalLink } from "lucide-react"
 import Link from "next/link"
@@ -27,7 +25,7 @@ export default function ReferencePage() {
   if (!project) {
     return (
       <div className="flex flex-col items-center justify-center py-20">
-        <h2 className="text-xl font-semibold mb-2">Project not found</h2>
+        <h2 className="font-heading text-xl mb-2">Project not found</h2>
         <Link href="/projects">
           <Button variant="outline">Back to Projects</Button>
         </Link>
@@ -68,40 +66,43 @@ export default function ReferencePage() {
     <div className="space-y-6">
       <div className="flex items-center gap-4">
         <Link href={`/projects/${projectId}`}>
-          <Button variant="ghost" size="icon">
+          <Button variant="ghost" size="icon" className="h-9 w-9">
             <ArrowLeft className="h-4 w-4" />
           </Button>
         </Link>
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">
+          <h1 className="font-heading text-2xl tracking-tight">
             Reference — {project.name}
           </h1>
           <p className="text-muted-foreground text-sm">Checklists, tips, and prompts for each stage</p>
         </div>
       </div>
 
-      <div className="flex gap-2 overflow-x-auto pb-2">
-        {STAGES.map((stage) => (
-          <Button
-            key={stage.key}
-            variant={activeStage === stage.key ? "default" : "outline"}
-            size="sm"
-            onClick={() => setActiveStage(stage.key)}
-            className="whitespace-nowrap"
-          >
-            <div className={`h-2 w-2 rounded-full mr-2 ${getStageDotColor(stage.key)}`} />
-            {stage.label}
-          </Button>
-        ))}
+      <div className="flex gap-1.5 overflow-x-auto pb-2 -mx-1 px-1">
+        {STAGES.map((stage) => {
+          const colors = getStageColors(stage.key)
+          return (
+            <Button
+              key={stage.key}
+              variant={activeStage === stage.key ? "default" : "outline"}
+              size="sm"
+              onClick={() => setActiveStage(stage.key)}
+              className="whitespace-nowrap gap-1.5"
+            >
+              <div className={`h-2 w-2 rounded-full ${colors.dot}`} />
+              {stage.label}
+            </Button>
+          )
+        })}
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
         <div className="space-y-4">
-          <h2 className="text-lg font-semibold flex items-center gap-2">
+          <h2 className="font-heading text-lg tracking-tight flex items-center gap-2">
             <Checkbox disabled checked className="h-4 w-4" />
             Stage Checklist
           </h2>
-          <Card>
+          <Card className="border-border/50">
             <CardContent className="p-4 space-y-3">
               {checklist.map((item, index) => {
                 const matchingTask = projectTasks.find((t) => t.title === item)
@@ -135,14 +136,14 @@ export default function ReferencePage() {
 
         <div className="space-y-4">
           <div className="space-y-4">
-            <h2 className="text-lg font-semibold flex items-center gap-2">
-              <Lightbulb className="h-5 w-5 text-yellow-500" />
+            <h2 className="font-heading text-lg tracking-tight flex items-center gap-2">
+              <Lightbulb className="h-5 w-5 text-mer-gold" />
               Do&apos;s & Don&apos;ts
             </h2>
 
-            <Card>
+            <Card className="border-mer-green/20">
               <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-medium text-green-600 flex items-center gap-2">
+                <CardTitle className="text-sm font-medium text-mer-green dark:text-mer-green-light flex items-center gap-2">
                   <Check className="h-4 w-4" /> Do&apos;s
                 </CardTitle>
               </CardHeader>
@@ -150,7 +151,7 @@ export default function ReferencePage() {
                 <ul className="space-y-2">
                   {tips.dos.map((doItem, i) => (
                     <li key={i} className="text-sm flex items-start gap-2">
-                      <Check className="h-4 w-4 text-green-500 mt-0.5 shrink-0" />
+                      <Check className="h-4 w-4 text-mer-green mt-0.5 shrink-0" />
                       <span>{doItem}</span>
                     </li>
                   ))}
@@ -158,9 +159,9 @@ export default function ReferencePage() {
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className="border-mer-rust/20">
               <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-medium text-red-600 flex items-center gap-2">
+                <CardTitle className="text-sm font-medium text-mer-rust dark:text-mer-rust-light flex items-center gap-2">
                   <AlertTriangle className="h-4 w-4" /> Don&apos;ts
                 </CardTitle>
               </CardHeader>
@@ -168,7 +169,7 @@ export default function ReferencePage() {
                 <ul className="space-y-2">
                   {tips.donts.map((dontItem, i) => (
                     <li key={i} className="text-sm flex items-start gap-2">
-                      <AlertTriangle className="h-4 w-4 text-red-500 mt-0.5 shrink-0" />
+                      <AlertTriangle className="h-4 w-4 text-mer-rust mt-0.5 shrink-0" />
                       <span>{dontItem}</span>
                     </li>
                   ))}
@@ -179,13 +180,13 @@ export default function ReferencePage() {
 
           {(activeStage === "build" || activeStage === "seo") && (
             <div className="space-y-4">
-              <h2 className="text-lg font-semibold flex items-center gap-2">
+              <h2 className="font-heading text-lg tracking-tight flex items-center gap-2">
                 <Copy className="h-5 w-5" />
                 Ready-to-use Prompts
               </h2>
 
               {activeStage === "build" && (
-                <Card>
+                <Card className="border-border/50">
                   <CardHeader className="pb-2">
                     <CardTitle className="text-sm font-medium flex items-center justify-between">
                       AI Build Prompt
@@ -203,7 +204,7 @@ export default function ReferencePage() {
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="p-4 pt-0">
-                    <pre className="text-xs bg-muted p-3 rounded-md overflow-x-auto whitespace-pre-wrap">
+                    <pre className="text-xs bg-muted p-3 rounded-lg overflow-x-auto whitespace-pre-wrap font-mono">
                       {buildPrompt}
                     </pre>
                   </CardContent>
@@ -211,7 +212,7 @@ export default function ReferencePage() {
               )}
 
               {activeStage === "seo" && (
-                <Card>
+                <Card className="border-border/50">
                   <CardHeader className="pb-2">
                     <CardTitle className="text-sm font-medium flex items-center justify-between">
                       SEO Prompt
@@ -229,7 +230,7 @@ export default function ReferencePage() {
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="p-4 pt-0">
-                    <pre className="text-xs bg-muted p-3 rounded-md overflow-x-auto whitespace-pre-wrap">
+                    <pre className="text-xs bg-muted p-3 rounded-lg overflow-x-auto whitespace-pre-wrap font-mono">
                       {seoPrompt}
                     </pre>
                   </CardContent>
@@ -239,35 +240,20 @@ export default function ReferencePage() {
           )}
 
           {activeStage === "domain" && (
-            <Card>
+            <Card className="border-border/50">
               <CardHeader className="pb-2">
                 <CardTitle className="text-sm font-medium">Domain Research Tools</CardTitle>
               </CardHeader>
               <CardContent className="p-4 pt-0 space-y-2">
-                <a
-                  href="https://instantdomainsearch.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2 text-sm text-primary hover:underline"
-                >
+                <a href="https://instantdomainsearch.com" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm text-primary hover:underline">
                   <ExternalLink className="h-3.5 w-3.5" />
                   instantdomainsearch.com — Search for .com domains
                 </a>
-                <a
-                  href="https://www.namecheap.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2 text-sm text-primary hover:underline"
-                >
+                <a href="https://www.namecheap.com" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm text-primary hover:underline">
                   <ExternalLink className="h-3.5 w-3.5" />
                   Namecheap — Buy domains (credit card)
                 </a>
-                <a
-                  href="https://www.godaddy.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2 text-sm text-primary hover:underline"
-                >
+                <a href="https://www.godaddy.com" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm text-primary hover:underline">
                   <ExternalLink className="h-3.5 w-3.5" />
                   GoDaddy — Buy domains (UPI option)
                 </a>
@@ -276,44 +262,24 @@ export default function ReferencePage() {
           )}
 
           {activeStage === "setup" && (
-            <Card>
+            <Card className="border-border/50">
               <CardHeader className="pb-2">
                 <CardTitle className="text-sm font-medium">Setup Resources</CardTitle>
               </CardHeader>
               <CardContent className="p-4 pt-0 space-y-2">
-                <a
-                  href="https://astro.build"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2 text-sm text-primary hover:underline"
-                >
+                <a href="https://astro.build" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm text-primary hover:underline">
                   <ExternalLink className="h-3.5 w-3.5" />
                   Astro JS — SEO-friendly framework
                 </a>
-                <a
-                  href="https://vercel.com/design"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2 text-sm text-primary hover:underline"
-                >
+                <a href="https://vercel.com/design" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm text-primary hover:underline">
                   <ExternalLink className="h-3.5 w-3.5" />
                   Vercel design.md — Design guidelines
                 </a>
-                <a
-                  href="https://cursor.sh"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2 text-sm text-primary hover:underline"
-                >
+                <a href="https://cursor.sh" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm text-primary hover:underline">
                   <ExternalLink className="h-3.5 w-3.5" />
                   Cursor — AI code editor
                 </a>
-                <a
-                  href="https://claude.ai"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2 text-sm text-primary hover:underline"
-                >
+                <a href="https://claude.ai" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm text-primary hover:underline">
                   <ExternalLink className="h-3.5 w-3.5" />
                   Claude Code — AI coding agent
                 </a>
@@ -322,26 +288,16 @@ export default function ReferencePage() {
           )}
 
           {activeStage === "build" && (
-            <Card>
+            <Card className="border-border/50">
               <CardHeader className="pb-2">
                 <CardTitle className="text-sm font-medium">Build Tools</CardTitle>
               </CardHeader>
               <CardContent className="p-4 pt-0 space-y-2">
-                <a
-                  href="https://logofa.st"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2 text-sm text-primary hover:underline"
-                >
+                <a href="https://logofa.st" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm text-primary hover:underline">
                   <ExternalLink className="h-3.5 w-3.5" />
                   Logofa.st — Create favicons
                 </a>
-                <a
-                  href="https://realfavicongenerator.net"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2 text-sm text-primary hover:underline"
-                >
+                <a href="https://realfavicongenerator.net" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm text-primary hover:underline">
                   <ExternalLink className="h-3.5 w-3.5" />
                   Real Favicon Generator — Generate all favicon sizes
                 </a>
@@ -350,17 +306,12 @@ export default function ReferencePage() {
           )}
 
           {activeStage === "research" && (
-            <Card>
+            <Card className="border-border/50">
               <CardHeader className="pb-2">
                 <CardTitle className="text-sm font-medium">Research Tools</CardTitle>
               </CardHeader>
               <CardContent className="p-4 pt-0 space-y-2">
-                <a
-                  href="https://ahrefs.com/keyword-generator"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2 text-sm text-primary hover:underline"
-                >
+                <a href="https://ahrefs.com/keyword-generator" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm text-primary hover:underline">
                   <ExternalLink className="h-3.5 w-3.5" />
                   Ahrefs Keyword Generator — Free keyword research
                 </a>
@@ -369,44 +320,24 @@ export default function ReferencePage() {
           )}
 
           {activeStage === "deploy" && (
-            <Card>
+            <Card className="border-border/50">
               <CardHeader className="pb-2">
                 <CardTitle className="text-sm font-medium">Deployment Resources</CardTitle>
               </CardHeader>
               <CardContent className="p-4 pt-0 space-y-2">
-                <a
-                  href="https://pages.cloudflare.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2 text-sm text-primary hover:underline"
-                >
+                <a href="https://pages.cloudflare.com" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm text-primary hover:underline">
                   <ExternalLink className="h-3.5 w-3.5" />
                   Cloudflare Pages — Free hosting
                 </a>
-                <a
-                  href="https://search.google.com/search-console"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2 text-sm text-primary hover:underline"
-                >
+                <a href="https://search.google.com/search-console" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm text-primary hover:underline">
                   <ExternalLink className="h-3.5 w-3.5" />
                   Google Search Console
                 </a>
-                <a
-                  href="https://www.bing.com/webmasters"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2 text-sm text-primary hover:underline"
-                >
+                <a href="https://www.bing.com/webmasters" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm text-primary hover:underline">
                   <ExternalLink className="h-3.5 w-3.5" />
                   Bing Webmaster Tools
                 </a>
-                <a
-                  href="https://analytics.google.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2 text-sm text-primary hover:underline"
-                >
+                <a href="https://analytics.google.com" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm text-primary hover:underline">
                   <ExternalLink className="h-3.5 w-3.5" />
                   Google Analytics
                 </a>
@@ -415,17 +346,12 @@ export default function ReferencePage() {
           )}
 
           {activeStage === "monetize" && (
-            <Card>
+            <Card className="border-border/50">
               <CardHeader className="pb-2">
                 <CardTitle className="text-sm font-medium">Monetization Resources</CardTitle>
               </CardHeader>
               <CardContent className="p-4 pt-0 space-y-2">
-                <a
-                  href="https://www.google.com/adsense"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2 text-sm text-primary hover:underline"
-                >
+                <a href="https://www.google.com/adsense" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm text-primary hover:underline">
                   <ExternalLink className="h-3.5 w-3.5" />
                   Google AdSense — Apply for ad revenue
                 </a>

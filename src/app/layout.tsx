@@ -1,11 +1,18 @@
 import type { Metadata } from "next"
-import { Geist, Geist_Mono } from "next/font/google"
+import { DM_Serif_Display, DM_Sans, Geist_Mono } from "next/font/google"
 import "./globals.css"
 import { AppShell } from "@/components/app-shell"
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const dmSerif = DM_Serif_Display({
+  variable: "--font-heading",
   subsets: ["latin"],
+  weight: "400",
+})
+
+const dmSans = DM_Sans({
+  variable: "--font-sans",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
 })
 
 const geistMono = Geist_Mono({
@@ -21,12 +28,12 @@ export const metadata: Metadata = {
 }
 
 export const viewport = {
-  themeColor: "#0a0a0a",
+  themeColor: "#2A2826",
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
+    <html lang="en" className={`${dmSerif.variable} ${dmSans.variable} ${geistMono.variable}`}>
       <body className="antialiased">
         <AppShell>{children}</AppShell>
       </body>

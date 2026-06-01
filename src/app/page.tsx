@@ -2,7 +2,7 @@
 
 import { useAppStore } from "@/lib/store"
 import { STAGES } from "@/lib/types"
-import { getStageColor, getStageLabel, getStageDotColor, formatCurrency, daysAgo } from "@/lib/helpers"
+import { getStageColor, getStageLabel, getStageDotColor, getStageColors, formatCurrency, daysAgo } from "@/lib/helpers"
 import Link from "next/link"
 import {
   ArrowRight,
@@ -12,6 +12,8 @@ import {
   DollarSign,
   Globe,
   Lightbulb,
+  Compass,
+  ChevronRight,
 } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -43,54 +45,54 @@ export default function DashboardPage() {
     .slice(0, 5)
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="space-y-8">
+      <div className="flex items-start justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Dashboard</h1>
+          <h1 className="font-heading text-3xl tracking-tight">Dashboard</h1>
           <p className="text-muted-foreground text-sm mt-1">
             Track your microtool websites from idea to monetization
           </p>
         </div>
         <Link href="/projects/new">
-          <Button>
-            <Plus className="h-4 w-4 mr-2" />
+          <Button className="gap-2">
+            <Plus className="h-4 w-4" />
             New Project
           </Button>
         </Link>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card>
+        <Card className="border-border/50 shadow-sm">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Total Projects</CardTitle>
-            <FolderKanban className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Projects</CardTitle>
+            <FolderKanban className="h-4 w-4 text-mer-amber" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{projects.length}</div>
+            <div className="text-2xl font-heading tracking-tight">{projects.length}</div>
             <p className="text-xs text-muted-foreground mt-1">
               {activeProjects} active · {completedProjects} completed
             </p>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="border-border/50 shadow-sm">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Launched</CardTitle>
-            <Globe className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Launched</CardTitle>
+            <Globe className="h-4 w-4 text-mer-teal" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{launchedProjects}</div>
+            <div className="text-2xl font-heading tracking-tight">{launchedProjects}</div>
             <p className="text-xs text-muted-foreground mt-1">In monitoring stage</p>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="border-border/50 shadow-sm">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Revenue</CardTitle>
-            <TrendingUp className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Revenue</CardTitle>
+            <TrendingUp className="h-4 w-4 text-mer-green" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">
+            <div className="text-2xl font-heading tracking-tight">
               {formatCurrency(totalRevenueINR, "INR")}
             </div>
             <p className="text-xs text-muted-foreground mt-1">
@@ -99,13 +101,13 @@ export default function DashboardPage() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="border-border/50 shadow-sm">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Total Cost</CardTitle>
-            <DollarSign className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Costs</CardTitle>
+            <DollarSign className="h-4 w-4 text-mer-rust" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{formatCurrency(totalCostINR, "INR")}</div>
+            <div className="text-2xl font-heading tracking-tight">{formatCurrency(totalCostINR, "INR")}</div>
             <p className="text-xs text-muted-foreground mt-1">
               {formatCurrency(totalCostUSD, "USD")} USD
             </p>
@@ -116,17 +118,19 @@ export default function DashboardPage() {
       <div className="grid gap-6 lg:grid-cols-3">
         <div className="lg:col-span-2 space-y-4">
           <div className="flex items-center justify-between">
-            <h2 className="text-lg font-semibold">Recent Projects</h2>
-            <Link href="/projects" className="text-sm text-primary hover:underline">
-              View all →
+            <h2 className="font-heading text-xl tracking-tight">Recent Projects</h2>
+            <Link href="/projects" className="text-sm text-primary hover:underline flex items-center gap-1">
+              View all <ChevronRight className="h-3 w-3" />
             </Link>
           </div>
 
           {recentProjects.length === 0 ? (
-            <Card>
-              <CardContent className="flex flex-col items-center justify-center py-12">
-                <Lightbulb className="h-12 w-12 text-muted-foreground mb-4" />
-                <h3 className="text-lg font-medium mb-1">No projects yet</h3>
+            <Card className="border-border/50">
+              <CardContent className="flex flex-col items-center justify-center py-16">
+                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-4">
+                  <Compass className="h-6 w-6 text-primary" />
+                </div>
+                <h3 className="font-heading text-lg mb-1">No projects yet</h3>
                 <p className="text-sm text-muted-foreground mb-4">
                   Start tracking your microtool websites
                 </p>
@@ -139,20 +143,22 @@ export default function DashboardPage() {
               </CardContent>
             </Card>
           ) : (
-            <div className="space-y-3">
+            <div className="space-y-2">
               {recentProjects.map((project) => {
                 const projectTasks = tasks.filter((t) => t.projectId === project.id)
                 const doneTasks = projectTasks.filter((t) => t.status === "done").length
                 const totalTasks = projectTasks.length
                 const progress = totalTasks > 0 ? Math.round((doneTasks / totalTasks) * 100) : 0
+                const colors = getStageColors(project.stage)
 
                 return (
                   <Link key={project.id} href={`/projects/${project.id}`}>
-                    <Card className="hover:bg-accent/50 transition-colors cursor-pointer">
+                    <Card className="hover:shadow-md transition-all duration-200 cursor-pointer border-border/50 group">
                       <CardContent className="p-4">
                         <div className="flex items-center justify-between mb-2">
-                          <div className="flex items-center gap-2">
-                            <span className="font-medium">{project.name}</span>
+                          <div className="flex items-center gap-2.5">
+                            <div className={`h-2.5 w-2.5 rounded-full ${colors.dot}`} />
+                            <span className="font-medium group-hover:text-primary transition-colors">{project.name}</span>
                             <Badge variant="outline" className={getStageColor(project.stage)}>
                               {getStageLabel(project.stage)}
                             </Badge>
@@ -162,12 +168,12 @@ export default function DashboardPage() {
                           </div>
                         </div>
                         <div className="flex items-center gap-3">
-                          <Progress value={progress} className="h-2 flex-1" />
-                          <span className="text-xs text-muted-foreground w-12 text-right">
+                          <Progress value={progress} className="h-1.5 flex-1" />
+                          <span className="text-xs text-muted-foreground stage-number w-10 text-right">
                             {progress}%
                           </span>
                         </div>
-                        <p className="text-xs text-muted-foreground mt-2">
+                        <p className="text-xs text-muted-foreground mt-1.5">
                           {doneTasks}/{totalTasks} tasks · Updated {daysAgo(project.updatedAt)}
                         </p>
                       </CardContent>
@@ -180,20 +186,19 @@ export default function DashboardPage() {
         </div>
 
         <div className="space-y-4">
-          <h2 className="text-lg font-semibold">Pipeline Stages</h2>
-          <Card>
-            <CardContent className="p-4 space-y-3">
+          <h2 className="font-heading text-xl tracking-tight">Pipeline Stages</h2>
+          <Card className="border-border/50">
+            <CardContent className="p-4 space-y-2.5">
               {STAGES.map((stage, index) => {
                 const count = projects.filter((p) => p.stage === stage.key).length
+                const colors = getStageColors(stage.key)
                 return (
                   <div key={stage.key} className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <div
-                        className={`h-2.5 w-2.5 rounded-full ${getStageDotColor(stage.key)}`}
-                      />
+                    <div className="flex items-center gap-2.5">
+                      <div className={`h-2 w-2 rounded-full ${colors.dot}`} />
                       <span className="text-sm">{stage.label}</span>
                     </div>
-                    <Badge variant="secondary" className="text-xs">
+                    <Badge variant="secondary" className="text-xs stage-number">
                       {count}
                     </Badge>
                   </div>
@@ -202,16 +207,16 @@ export default function DashboardPage() {
             </CardContent>
           </Card>
 
-          <h2 className="text-lg font-semibold">Quick Start</h2>
-          <Card>
-            <CardContent className="p-4 space-y-3">
-              <Link href="/projects/new" className="flex items-center justify-between p-2 rounded-md hover:bg-accent transition-colors">
+          <h2 className="font-heading text-xl tracking-tight">Quick Start</h2>
+          <Card className="border-border/50">
+            <CardContent className="p-3 space-y-1">
+              <Link href="/projects/new" className="flex items-center justify-between p-2.5 rounded-md hover:bg-accent/80 transition-colors group">
                 <span className="text-sm">Create New Project</span>
-                <ArrowRight className="h-4 w-4 text-muted-foreground" />
+                <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
               </Link>
-              <Link href="/reference" className="flex items-center justify-between p-2 rounded-md hover:bg-accent transition-colors">
+              <Link href="/reference" className="flex items-center justify-between p-2.5 rounded-md hover:bg-accent/80 transition-colors group">
                 <span className="text-sm">Reference Guide</span>
-                <ArrowRight className="h-4 w-4 text-muted-foreground" />
+                <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
               </Link>
             </CardContent>
           </Card>

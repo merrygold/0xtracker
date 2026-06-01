@@ -2,9 +2,9 @@
 
 import { useAppStore } from "@/lib/store"
 import { STAGES, type ProjectStage } from "@/lib/types"
-import { getStageColor, getStageLabel, getStageDotColor, daysAgo } from "@/lib/helpers"
+import { getStageColor, getStageLabel, getStageDotColor, getStageColors, daysAgo } from "@/lib/helpers"
 import Link from "next/link"
-import { Plus, Search, Filter, Globe, ArrowUpDown } from "lucide-react"
+import { Plus, Search, Globe, ChevronRight } from "lucide-react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -30,14 +30,14 @@ export default function ProjectsPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Projects</h1>
+          <h1 className="font-heading text-3xl tracking-tight">Projects</h1>
           <p className="text-muted-foreground text-sm mt-1">
             {projects.length} microtool{projects.length !== 1 ? "s" : ""} tracked
           </p>
         </div>
         <Link href="/projects/new">
-          <Button>
-            <Plus className="h-4 w-4 mr-2" />
+          <Button className="gap-2">
+            <Plus className="h-4 w-4" />
             New Project
           </Button>
         </Link>
@@ -53,7 +53,7 @@ export default function ProjectsPage() {
             className="pl-9"
           />
         </div>
-        <div className="flex gap-2 flex-wrap">
+        <div className="flex gap-1.5 flex-wrap">
           <Button
             variant={stageFilter === "all" ? "default" : "outline"}
             size="sm"
@@ -61,24 +61,29 @@ export default function ProjectsPage() {
           >
             All
           </Button>
-          {STAGES.map((stage) => (
-            <Button
-              key={stage.key}
-              variant={stageFilter === stage.key ? "default" : "outline"}
-              size="sm"
-              onClick={() => setStageFilter(stage.key)}
-            >
-              {stage.label}
-            </Button>
-          ))}
+          {STAGES.map((stage) => {
+            const colors = getStageColors(stage.key)
+            return (
+              <Button
+                key={stage.key}
+                variant={stageFilter === stage.key ? "default" : "outline"}
+                size="sm"
+                onClick={() => setStageFilter(stage.key)}
+                className="gap-1.5"
+              >
+                <div className={`h-2 w-2 rounded-full ${colors.dot}`} />
+                {stage.label}
+              </Button>
+            )
+          })}
         </div>
       </div>
 
       {filtered.length === 0 ? (
-        <Card>
-          <CardContent className="flex flex-col items-center justify-center py-12">
-            <Globe className="h-12 w-12 text-muted-foreground mb-4" />
-            <h3 className="text-lg font-medium mb-1">No projects found</h3>
+        <Card className="border-border/50">
+          <CardContent className="flex flex-col items-center justify-center py-16">
+            <Globe className="h-12 w-12 text-muted-foreground/40 mb-4" />
+            <h3 className="font-heading text-lg mb-1">No projects found</h3>
             <p className="text-sm text-muted-foreground mb-4">
               {projects.length === 0
                 ? "Create your first microtool project to get started"
@@ -103,14 +108,15 @@ export default function ProjectsPage() {
             const progress = totalTasks > 0 ? Math.round((doneTasks / totalTasks) * 100) : 0
             const stageTasks = projectTasks.filter((t) => t.stage === project.stage)
             const stageDone = stageTasks.filter((t) => t.status === "done").length
+            const colors = getStageColors(project.stage)
 
             return (
               <Link key={project.id} href={`/projects/${project.id}`}>
-                <Card className="hover:bg-accent/50 transition-colors cursor-pointer h-full">
+                <Card className="hover:shadow-md transition-all duration-200 cursor-pointer h-full border-border/50 group">
                   <CardContent className="p-5">
                     <div className="flex items-start justify-between mb-3">
                       <div>
-                        <h3 className="font-semibold">{project.name}</h3>
+                        <h3 className="font-medium group-hover:text-primary transition-colors">{project.name}</h3>
                         {project.domain && (
                           <p className="text-xs text-muted-foreground mt-0.5">{project.domain}</p>
                         )}
@@ -131,9 +137,9 @@ export default function ProjectsPage() {
                     <div className="space-y-2">
                       <div className="flex items-center justify-between text-xs text-muted-foreground">
                         <span>Overall Progress</span>
-                        <span>{progress}%</span>
+                        <span className="stage-number">{progress}%</span>
                       </div>
-                      <Progress value={progress} className="h-2" />
+                      <Progress value={progress} className="h-1.5" />
 
                       <div className="flex items-center justify-between text-xs text-muted-foreground">
                         <span>

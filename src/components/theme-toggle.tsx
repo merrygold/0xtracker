@@ -23,7 +23,13 @@ export function ThemeToggle() {
   }
 
   return (
-    <Button variant="ghost" size="icon" onClick={toggle} title={dark ? "Switch to light mode" : "Switch to dark mode"}>
+    <Button
+      variant="ghost"
+      size="icon"
+      onClick={toggle}
+      title={dark ? "Switch to light mode" : "Switch to dark mode"}
+      className="h-8 w-8 rounded-md"
+    >
       {dark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
     </Button>
   )

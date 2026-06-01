@@ -1,33 +1,82 @@
 import { STAGES, type ProjectStage } from "./types"
 
+const STAGE_COLORS: Record<ProjectStage, { bg: string; text: string; border: string; dot: string; light: string }> = {
+  idea: {
+    bg: "bg-mer-amber/15",
+    text: "text-mer-amber dark:text-mer-amber-light",
+    border: "border-mer-amber/30",
+    dot: "bg-mer-amber",
+    light: "bg-mer-amber-light/30 dark:bg-mer-amber/20",
+  },
+  research: {
+    bg: "bg-mer-teal/15",
+    text: "text-mer-teal dark:text-mer-teal-light",
+    border: "border-mer-teal/30",
+    dot: "bg-mer-teal",
+    light: "bg-mer-teal-light/30 dark:bg-mer-teal/20",
+  },
+  domain: {
+    bg: "bg-mer-rose/15",
+    text: "text-mer-rose dark:text-mer-rose-light",
+    border: "border-mer-rose/30",
+    dot: "bg-mer-rose",
+    light: "bg-mer-rose-light/30 dark:bg-mer-rose/20",
+  },
+  setup: {
+    bg: "bg-mer-earth/15",
+    text: "text-mer-earth dark:text-mer-earth-light",
+    border: "border-mer-earth/30",
+    dot: "bg-mer-earth",
+    light: "bg-mer-earth-light/30 dark:bg-mer-earth/20",
+  },
+  build: {
+    bg: "bg-mer-green/15",
+    text: "text-mer-green dark:text-mer-green-light",
+    border: "border-mer-green/30",
+    dot: "bg-mer-green",
+    light: "bg-mer-green-light/30 dark:bg-mer-green/20",
+  },
+  seo: {
+    bg: "bg-mer-gold/15",
+    text: "text-mer-gold dark:text-mer-gold-light",
+    border: "border-mer-gold/30",
+    dot: "bg-mer-gold",
+    light: "bg-mer-gold-light/30 dark:bg-mer-gold/20",
+  },
+  deploy: {
+    bg: "bg-mer-blue/15",
+    text: "text-mer-blue dark:text-mer-blue-light",
+    border: "border-mer-blue/30",
+    dot: "bg-mer-blue",
+    light: "bg-mer-blue-light/30 dark:bg-mer-blue/20",
+  },
+  monetize: {
+    bg: "bg-mer-lime/15",
+    text: "text-mer-lime dark:text-mer-lime-light",
+    border: "border-mer-lime/30",
+    dot: "bg-mer-lime",
+    light: "bg-mer-lime-light/30 dark:bg-mer-lime/20",
+  },
+  monitor: {
+    bg: "bg-mer-rust/15",
+    text: "text-mer-rust dark:text-mer-rust-light",
+    border: "border-mer-rust/30",
+    dot: "bg-mer-rust",
+    light: "bg-mer-rust-light/30 dark:bg-mer-rust/20",
+  },
+}
+
 export function getStageColor(stage: ProjectStage): string {
-  const colors: Record<ProjectStage, string> = {
-    idea: "bg-purple-500/15 text-purple-700 dark:text-purple-400 border-purple-500/25",
-    research: "bg-blue-500/15 text-blue-700 dark:text-blue-400 border-blue-500/25",
-    domain: "bg-cyan-500/15 text-cyan-700 dark:text-cyan-400 border-cyan-500/25",
-    setup: "bg-orange-500/15 text-orange-700 dark:text-orange-400 border-orange-500/25",
-    build: "bg-green-500/15 text-green-700 dark:text-green-400 border-green-500/25",
-    seo: "bg-yellow-500/15 text-yellow-700 dark:text-yellow-400 border-yellow-500/25",
-    deploy: "bg-indigo-500/15 text-indigo-700 dark:text-indigo-400 border-indigo-500/25",
-    monetize: "bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border-emerald-500/25",
-    monitor: "bg-rose-500/15 text-rose-700 dark:text-rose-400 border-rose-500/25",
-  }
-  return colors[stage]
+  const c = STAGE_COLORS[stage]
+  return `${c.bg} ${c.text} ${c.border}`
 }
 
 export function getStageDotColor(stage: ProjectStage): string {
-  const colors: Record<ProjectStage, string> = {
-    idea: "bg-purple-500",
-    research: "bg-blue-500",
-    domain: "bg-cyan-500",
-    setup: "bg-orange-500",
-    build: "bg-green-500",
-    seo: "bg-yellow-500",
-    deploy: "bg-indigo-500",
-    monetize: "bg-emerald-500",
-    monitor: "bg-rose-500",
-  }
-  return colors[stage]
+  return STAGE_COLORS[stage].dot
+}
+
+export function getStageColors(stage: ProjectStage) {
+  return STAGE_COLORS[stage]
 }
 
 export function getStageLabel(stage: ProjectStage): string {

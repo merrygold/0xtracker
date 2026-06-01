@@ -11,7 +11,6 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
-import { Separator } from "@/components/ui/separator"
 import { ArrowLeft, Plus, Trash2, TrendingUp, TrendingDown, DollarSign } from "lucide-react"
 import Link from "next/link"
 import { useParams } from "next/navigation"
@@ -38,7 +37,7 @@ export default function FinancePage() {
   if (!project) {
     return (
       <div className="flex flex-col items-center justify-center py-20">
-        <h2 className="text-xl font-semibold mb-2">Project not found</h2>
+        <h2 className="font-heading text-xl mb-2">Project not found</h2>
         <Link href="/projects">
           <Button variant="outline">Back to Projects</Button>
         </Link>
@@ -93,12 +92,12 @@ export default function FinancePage() {
     <div className="space-y-6">
       <div className="flex items-center gap-4">
         <Link href={`/projects/${projectId}`}>
-          <Button variant="ghost" size="icon">
+          <Button variant="ghost" size="icon" className="h-9 w-9">
             <ArrowLeft className="h-4 w-4" />
           </Button>
         </Link>
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">
+          <h1 className="font-heading text-2xl tracking-tight">
             Financials — {project.name}
           </h1>
           <p className="text-muted-foreground text-sm">Track costs and revenue</p>
@@ -106,50 +105,50 @@ export default function FinancePage() {
       </div>
 
       <div className="grid gap-4 md:grid-cols-4">
-        <Card>
+        <Card className="border-border/50 shadow-sm">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Revenue</CardTitle>
-            <TrendingUp className="h-4 w-4 text-green-500" />
+            <CardTitle className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Revenue</CardTitle>
+            <TrendingUp className="h-4 w-4 text-mer-green" />
           </CardHeader>
           <CardContent>
-            <div className="text-xl font-bold">{formatCurrency(totalRevenueINR, "INR")}</div>
+            <div className="text-xl font-heading tracking-tight">{formatCurrency(totalRevenueINR, "INR")}</div>
             <p className="text-xs text-muted-foreground">{formatCurrency(totalRevenueUSD, "USD")} USD</p>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="border-border/50 shadow-sm">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Costs</CardTitle>
-            <TrendingDown className="h-4 w-4 text-red-500" />
+            <CardTitle className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Costs</CardTitle>
+            <TrendingDown className="h-4 w-4 text-mer-rust" />
           </CardHeader>
           <CardContent>
-            <div className="text-xl font-bold">{formatCurrency(totalCostINR, "INR")}</div>
+            <div className="text-xl font-heading tracking-tight">{formatCurrency(totalCostINR, "INR")}</div>
             <p className="text-xs text-muted-foreground">{formatCurrency(totalCostUSD, "USD")} USD</p>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="border-border/50 shadow-sm">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Profit</CardTitle>
-            <DollarSign className="h-4 w-4 text-yellow-500" />
+            <CardTitle className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Profit</CardTitle>
+            <DollarSign className="h-4 w-4 text-mer-gold" />
           </CardHeader>
           <CardContent>
-            <div className={`text-xl font-bold ${profitINR >= 0 ? "text-green-600" : "text-red-600"}`}>
+            <div className={`text-xl font-heading tracking-tight ${profitINR >= 0 ? "text-mer-green" : "text-mer-rust"}`}>
               {formatCurrency(profitINR, "INR")}
             </div>
-            <p className={`text-xs ${profitUSD >= 0 ? "text-green-600" : "text-red-600"}`}>
+            <p className={`text-xs ${profitUSD >= 0 ? "text-mer-green" : "text-mer-rust"}`}>
               {formatCurrency(profitUSD, "USD")} USD
             </p>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="border-border/50 shadow-sm">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">ROI</CardTitle>
-            <DollarSign className="h-4 w-4 text-blue-500" />
+            <CardTitle className="text-xs font-medium uppercase tracking-wider text-muted-foreground">ROI</CardTitle>
+            <DollarSign className="h-4 w-4 text-mer-blue" />
           </CardHeader>
           <CardContent>
-            <div className="text-xl font-bold">
+            <div className="text-xl font-heading tracking-tight">
               {totalCostINR > 0
                 ? `${Math.round((profitINR / totalCostINR) * 100)}%`
                 : "—"}
@@ -160,29 +159,27 @@ export default function FinancePage() {
       </div>
 
       <div className="flex items-center justify-between">
-        <h2 className="text-lg font-semibold">Transactions</h2>
-        <Button onClick={() => setShowAdd(true)}>
-          <Plus className="h-4 w-4 mr-2" />
+        <h2 className="font-heading text-lg tracking-tight">Transactions</h2>
+        <Button className="gap-2" onClick={() => setShowAdd(true)}>
+          <Plus className="h-4 w-4" />
           Add Entry
         </Button>
       </div>
 
       {showAdd && (
-        <Card>
+        <Card className="border-primary/20 shadow-sm">
           <CardHeader>
-            <CardTitle>Add Financial Entry</CardTitle>
+            <CardTitle className="font-heading">Add Financial Entry</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid gap-4 md:grid-cols-2">
               <div className="space-y-2">
-                <Label>Type</Label>
+                <Label className="text-xs uppercase tracking-wider text-muted-foreground">Type</Label>
                 <Select
                   value={form.type}
                   onValueChange={(v) => setForm({ ...form, type: v as "cost" | "revenue" })}
                 >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
+                  <SelectTrigger><SelectValue /></SelectTrigger>
                   <SelectContent>
                     <SelectItem value="cost">Cost</SelectItem>
                     <SelectItem value="revenue">Revenue</SelectItem>
@@ -191,14 +188,12 @@ export default function FinancePage() {
               </div>
 
               <div className="space-y-2">
-                <Label>Category</Label>
+                <Label className="text-xs uppercase tracking-wider text-muted-foreground">Category</Label>
                 <Select
                   value={form.category}
                   onValueChange={(v) => setForm({ ...form, category: v ?? "domain" })}
                 >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
+                  <SelectTrigger><SelectValue /></SelectTrigger>
                   <SelectContent>
                     {FINANCIAL_CATEGORIES.map((cat) => (
                       <SelectItem key={cat.value} value={cat.value}>
@@ -210,7 +205,7 @@ export default function FinancePage() {
               </div>
 
               <div className="space-y-2">
-                <Label>Amount</Label>
+                <Label className="text-xs uppercase tracking-wider text-muted-foreground">Amount</Label>
                 <Input
                   type="number"
                   placeholder="0"
@@ -220,14 +215,12 @@ export default function FinancePage() {
               </div>
 
               <div className="space-y-2">
-                <Label>Currency</Label>
+                <Label className="text-xs uppercase tracking-wider text-muted-foreground">Currency</Label>
                 <Select
                   value={form.currency}
                   onValueChange={(v) => setForm({ ...form, currency: v as "INR" | "USD" })}
                 >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
+                  <SelectTrigger><SelectValue /></SelectTrigger>
                   <SelectContent>
                     <SelectItem value="INR">INR (₹)</SelectItem>
                     <SelectItem value="USD">USD ($)</SelectItem>
@@ -236,7 +229,7 @@ export default function FinancePage() {
               </div>
 
               <div className="space-y-2">
-                <Label>Date</Label>
+                <Label className="text-xs uppercase tracking-wider text-muted-foreground">Date</Label>
                 <Input
                   type="date"
                   value={form.date}
@@ -245,7 +238,7 @@ export default function FinancePage() {
               </div>
 
               <div className="space-y-2">
-                <Label>Source</Label>
+                <Label className="text-xs uppercase tracking-wider text-muted-foreground">Source</Label>
                 <Input
                   placeholder="e.g., Namecheap, Google AdSense"
                   value={form.source}
@@ -255,7 +248,7 @@ export default function FinancePage() {
             </div>
 
             <div className="space-y-2">
-              <Label>Notes</Label>
+              <Label className="text-xs uppercase tracking-wider text-muted-foreground">Notes</Label>
               <Textarea
                 placeholder="Optional notes..."
                 value={form.notes}
@@ -276,10 +269,12 @@ export default function FinancePage() {
       )}
 
       {sortedFinancials.length === 0 ? (
-        <Card>
-          <CardContent className="flex flex-col items-center justify-center py-12">
-            <DollarSign className="h-12 w-12 text-muted-foreground mb-4" />
-            <h3 className="text-lg font-medium mb-1">No transactions yet</h3>
+        <Card className="border-border/50">
+          <CardContent className="flex flex-col items-center justify-center py-16">
+            <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-4">
+              <DollarSign className="h-6 w-6 text-primary" />
+            </div>
+            <h3 className="font-heading text-lg mb-1">No transactions yet</h3>
             <p className="text-sm text-muted-foreground">
               Track your domain costs, hosting, and AdSense revenue
             </p>
@@ -288,14 +283,14 @@ export default function FinancePage() {
       ) : (
         <div className="space-y-2">
           {sortedFinancials.map((f) => (
-            <Card key={f.id}>
+            <Card key={f.id} className="border-border/50 shadow-sm hover:shadow-md transition-shadow">
               <CardContent className="p-4 flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div
                     className={`h-8 w-8 rounded-full flex items-center justify-center ${
                       f.type === "revenue"
-                        ? "bg-green-500/15 text-green-600"
-                        : "bg-red-500/15 text-red-600"
+                        ? "bg-mer-green/15 text-mer-green"
+                        : "bg-mer-rust/15 text-mer-rust"
                     }`}
                   >
                     {f.type === "revenue" ? (
@@ -316,8 +311,8 @@ export default function FinancePage() {
                 </div>
                 <div className="flex items-center gap-3">
                   <span
-                    className={`font-semibold ${
-                      f.type === "revenue" ? "text-green-600" : "text-red-600"
+                    className={`font-heading tracking-tight ${
+                      f.type === "revenue" ? "text-mer-green" : "text-mer-rust"
                     }`}
                   >
                     {f.type === "revenue" ? "+" : "-"}
